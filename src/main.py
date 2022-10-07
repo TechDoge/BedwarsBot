@@ -4,6 +4,7 @@ import cv2
 player = Player()
 window = cv2.namedWindow("BedwarsBot")
 
+
 while True:
     player.act()
     screen = player.decisions.current_shot
