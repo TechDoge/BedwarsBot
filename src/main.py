@@ -10,5 +10,7 @@ while True:
     screen = player.decisions.current_shot
     cv2.imshow("BedwarsBot", cv2.resize(screen, (192*4, 108*4)))
 
+    print("location:", player.decisions.detector.location)
+
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break

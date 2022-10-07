@@ -10,8 +10,8 @@ class Detector:
         self.width = window_width
         self.height = window_height
         self.location = [0, 0, 0]
-        self.tester = cv2.namedWindow("tester")
-        self.tester2 = cv2.namedWindow("tester2")
+        # self.tester = cv2.namedWindow("tester")
+        # self.tester2 = cv2.namedWindow("tester2")
  
     def get_number(self, number):
  
@@ -31,7 +31,8 @@ class Detector:
                 best_digit = i
         average_weight = np.average(np.array(all_weights))
         # print(f'best_weight={best_weight}, avg_weight={average_weight}')
-        if best_weight <2250000:
+        avg_c = self.average_color(number)
+        if best_weight <1500000 or avg_c[0] == 0 or avg_c[1] == 0 or avg_c[2] == 0 or avg_c[0] != avg_c[1] or avg_c[1] != avg_c[2]:
             return "empty"
         return best_digit
  
@@ -88,10 +89,10 @@ class Detector:
  
         for i in range(20):
             portion = self.shot[y_nums_pos[1]:y_nums_pos[1]+height, y_nums_pos[0]+spacing*i:y_nums_pos[0]+width+spacing*i]
-            if i == 0:
-                cv2.imshow("tester", cv2.resize(portion, (500, 500)))
-            elif i == 1:
-                cv2.imshow("tester2", portion)
+            # if i == 0:
+            #     cv2.imshow("tester", cv2.resize(portion, (500, 500)))
+            # elif i == 1:
+            #     cv2.imshow("tester2", portion)
             string = str(self.get_number(portion))
             if string == "10":
                 y_sign = -1
@@ -135,6 +136,5 @@ class Detector:
         location[0] = x_num
         location[1] = y_num
         location[2] = z_num
-        print(location)
         return location
 
