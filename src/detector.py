@@ -9,12 +9,29 @@ class Detector:
         self.y = window_y
         self.width = window_width
         self.height = window_height
+        self.location_manager = Location()
         self.location = [0, 0, 0]
+
+ 
+    def scan(self):
+        self.shot = self.get_shot()
+        self.location = self.location_manager.get_location(self.shot)
+ 
+    def get_shot(self):
+        with mss.mss() as sct:
+            monitor = {"top": self.y, "left": self.x, "width": self.width, "height": self.height}
+            img_array = np.array(sct.grab(monitor))
+            return img_array
+       
+    
+class Location:
+
+    def __init__(self):
+        self.shot = None
         # self.tester = cv2.namedWindow("tester")
-        # self.tester2 = cv2.namedWindow("tester2")
- 
+        # self.tester2 = cv2.namedWindow("tester2") 
+
     def get_number(self, number):
- 
         best_weight = -10000000000
         best_digit = -1
         all_weights=[]
@@ -31,39 +48,22 @@ class Detector:
                 best_digit = i
         average_weight = np.average(np.array(all_weights))
         # print(f'best_weight={best_weight}, avg_weight={average_weight}')
-        avg_c = self.average_color(number)
+        avg_c = np.average(number, axis=(0,1))
         if best_weight <1500000 or avg_c[0] == 0 or avg_c[1] == 0 or avg_c[2] == 0 or avg_c[0] != avg_c[1] or avg_c[1] != avg_c[2]:
             return "empty"
         return best_digit
- 
-    def scan(self):
-        self.shot = self.get_shot()
-        self.location = self.get_location()
- 
-    def get_shot(self):
-        with mss.mss() as sct:
-            monitor = {"top": self.y, "left": self.x, "width": self.width, "height": self.height}
-            img_array = np.array(sct.grab(monitor))
-            return img_array
- 
-    def average_color(self, portion):
-        return np.average(portion, axis=(0,1))
- 
-    def similarity(self, a, b):
-        sim = 1-(abs(a[0]-b[0])/(a[0]/2+b[0]/2)+abs(a[1]-b[1])/(a[1]/2+b[1]/2)+abs(a[2]-b[2])/(a[2]/2+b[2]/2))/3
-        return sim
-       
-    def get_location(self):
- 
+
+    def get_location(self, shot):
+        self.shot = shot 
         location = [0, 0, 0]
- 
+
         x_num = ""
         x_nums_pos = [57, 55]
         width = 12
         spacing = 15
         height = 17
         x_sign = 1
- 
+
         for i in range(20):
             portion = self.shot[x_nums_pos[1]:x_nums_pos[1]+height, x_nums_pos[0]+spacing*i:x_nums_pos[0]+width+spacing*i]
             # if i == 0:
@@ -86,7 +86,7 @@ class Detector:
         y_num = ""
         y_nums_pos = [57, 82]
         y_sign = 1
- 
+
         for i in range(20):
             portion = self.shot[y_nums_pos[1]:y_nums_pos[1]+height, y_nums_pos[0]+spacing*i:y_nums_pos[0]+width+spacing*i]
             # if i == 0:
@@ -112,7 +112,7 @@ class Detector:
         width = 11
         spacing = 15
         height = 16
- 
+
         for i in range(20):
             portion = self.shot[z_nums_pos[1]:z_nums_pos[1]+height, z_nums_pos[0]+spacing*i:z_nums_pos[0]+width+spacing*i]
             # if i == 2:
@@ -132,9 +132,7 @@ class Detector:
         else:
             z_num = 0
 
-
         location[0] = x_num
         location[1] = y_num
         location[2] = z_num
         return location
-
