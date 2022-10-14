@@ -18,4 +18,11 @@ class Player:
                 self.actions.hold_key(interaction)
             if header == "rel":
                 self.actions.rel_key(interaction)
-        
+            if header == "click":
+                if interaction == "left":
+                    self.actions.left_click()
+                if interaction == "right":
+                    self.actions.right_click()
+            if header == "move":
+                x, y = interaction.split(",")
+                self.actions.move_mouse(int(x), int(y))

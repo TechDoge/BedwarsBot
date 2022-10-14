@@ -6,15 +6,16 @@ class Actions:
         pass
 
     # Clicks / Key Presses
-    def left_click(self, x, y):
-        win32api.SetCursorPos((x, y))
+    def left_click(self):
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0)
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0)
 
-    def right_click(self, x, y):
-        win32api.SetCursorPos((x, y))
+    def right_click(self):
         win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTDOWN, 0, 0)
         win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP, 0, 0)
+
+    def move_mouse(self, x, y):
+        win32api.SetCursorPos((x, y))
 
     def press_key(self, key):
         key = ord(key.upper())

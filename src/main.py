@@ -2,10 +2,9 @@ from player import Player
 import cv2
 from debug.helper import *
 
-# startWithDelay(3)
+startWithDelay(1)
 player = Player()
 window = cv2.namedWindow("BedwarsBot")
-
 
 while True:
     player.act()
